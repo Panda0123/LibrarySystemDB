@@ -26,4 +26,5 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     @Query(value = "SELECT * FROM author WHERE author.id = ?1", nativeQuery = true)
     Optional<IdFNameMNameLName> findByIdFullNameOnly(Long authorId);
+
 }

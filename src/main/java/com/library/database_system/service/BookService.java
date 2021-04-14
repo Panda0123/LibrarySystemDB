@@ -62,8 +62,14 @@ public class BookService {
         return this.bookRepository.getBookDetails(bookId);
     }
 
-    public Collection<BookTransformer> getBooksDetailsPagination(int pageNum, int pageSize, String sortBy, String searchKey) {
-        return this.bookRepository.getBooksDetailsPagination(pageNum, pageSize, sortBy, searchKey);
+    public Collection<BookTransformer> getBooksDetailsPagination(
+            int pageNum, int pageSize, String sortBy, String searchKey,
+            String filterDateAdded, String filterAuthor, Integer filterFirstPublicationYear,
+            Integer filterLastPublicationYear, String filterClassification ) {
+
+        return this.bookRepository.getBooksDetailsPagination(
+                pageNum, pageSize, sortBy, searchKey, filterDateAdded, filterAuthor,
+                filterFirstPublicationYear, filterLastPublicationYear, filterClassification);
     }
 
     public Long getNumberOfBooks(String searchKey) {

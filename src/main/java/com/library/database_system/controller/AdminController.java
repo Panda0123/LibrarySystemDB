@@ -13,13 +13,4 @@ public class AdminController {
         return "login";
     }
 
-    @GetMapping(path = "fail_login")
-    public String logInFail() {
-        return "Failed login";
-    }
-
-    @GetMapping(path = "perform_login")
-    public String performLogin() {
-        return "Failed login";
-    }
 }

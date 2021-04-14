@@ -16,6 +16,7 @@ import com.library.database_system.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -61,12 +62,18 @@ public class BookController {
     }
 
     @GetMapping(path = "all/pagination")
-    public Collection<BookTransformer> getBooksDetailsPaginationSortById(
+    public Collection<BookTransformer> getBooksDetailsPaginationSortFilter(
             @RequestParam(required = true) int pageNum,
             @RequestParam(required = true) int pageSize,
             @RequestParam(required = false) String sortBy,
-            @RequestParam(required = false) String searchKey) {
-        return this.bookService.getBooksDetailsPagination(pageNum, pageSize, sortBy, searchKey);
+            @RequestParam(required = false) String searchKey,
+            @RequestParam(required = false) String filterDateAdded,
+            @RequestParam(required = false) String filterAuthor,
+            @RequestParam(required = false) Integer filterFirstPublicationYear,
+            @RequestParam(required = false) Integer filterLastPublicationYear,
+            @RequestParam(required = false) String filterClassification) {
+        return this.bookService.getBooksDetailsPagination(pageNum, pageSize, sortBy, searchKey,
+                filterDateAdded, filterAuthor, filterFirstPublicationYear, filterLastPublicationYear, filterClassification);
     }
 
     @PostMapping(path = "admin")

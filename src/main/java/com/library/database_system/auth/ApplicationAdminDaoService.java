@@ -45,19 +45,6 @@ public class ApplicationAdminDaoService implements ApplicationUserDao{
                                         true))
                         .collect(Collectors.toList());
 
-
-//        List<ApplicationUser> applicationUsers = Lists.newArrayList(
-//                new ApplicationUser(
-//                        "john",
-//                        passwordEncoder.encode("password"),
-//                        ADMIN.getGrantedAuthority(),
-//                        true,
-//                        true,
-//                        true,
-//                        true
-//                )
-//        );
-
         return applicationUsers;
     }
 }

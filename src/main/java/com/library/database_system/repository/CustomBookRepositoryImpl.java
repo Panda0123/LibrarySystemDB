@@ -6,6 +6,7 @@ import org.hibernate.jpa.QueryHints;
 import org.hibernate.query.Query;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 
 public class CustomBookRepositoryImpl implements CustomBookRepository {
@@ -48,15 +49,55 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
         return bookTransformers;
     }
 
-    public List<BookTransformer>getBooksDetailsPagination(int pageNum, int pageSize, String sortBy, String searchKey) {
+    public List<BookTransformer> getBooksDetailsPagination(
+            int pageNum, int pageSize, String sortBy, String searchKey,
+            String filterDateAdded, String filterAuthor, Integer filterFirstPublicationYear,
+            Integer filterLastPublicationYear, String filterClassification ) {
+
         String queryIds = "SELECT bk.id FROM com.library.database_system.domain.Book bk ";
         String queryBks =  queryGetBooksDetailsPagination;
+        String conditionId = "";
+
+        if (filterDateAdded != null) {
+            conditionId += String.format("bk.dateAdded>=%s ", LocalDate.parse(filterDateAdded));
+            queryBks += String.format("AND bk.dateAdded >= %s ", LocalDate.parse(filterDateAdded));
+        }
+
+        // TODO: filterAuthors
+        // filter in query authors and don't include those whose id is not in the
+
+        if (filterFirstPublicationYear != null) {
+            conditionId += String.format("bk.publishedDate>='%s' ", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
+            queryBks+= String.format("AND bk.publishedDate >= '%s' ", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
+        }
+
+        if (filterLastPublicationYear != null) {
+            conditionId += String.format("bk.publishedDate<='%s' ", LocalDate.of(filterLastPublicationYear, 1, 1).toString());
+            queryBks+= String.format("AND bk.publishedDate <= '%s' ", LocalDate.of(filterLastPublicationYear, 1, 1).toString());
+        }
+
+
+        if (!conditionId.equals("")) {
+            conditionId = "WHERE " + conditionId.strip().replace(" ", " AND ") + " ";
+        }
+
+        if (filterClassification != null) {
+            if (!conditionId.equals(""))
+                conditionId += String.format("AND bk.category.name Like '%%%s%%' ", filterClassification);
+            else
+                conditionId += String.format("WHERE bk.category.name Like '%%%s%%' ", filterClassification);
+            queryBks+= String.format("AND bk.category.name Like '%%%s%%' ", filterClassification);
+        }
 
         if (searchKey != null) {
-            queryIds += "WHERE bk.title LIKE '" + searchKey + "%' ";
-            queryBks += "AND bk.title LIKE '" + searchKey + "%' ";
+            if (!conditionId.equals(""))
+                conditionId += String.format("AND bk.title LIKE '%%%s%%' ", searchKey);
+            else
+                conditionId += String.format("WHERE bk.title LIKE '%%%s%%' ", searchKey);
+            queryBks += String.format("AND bk.title LIKE '%%%s%%' ", searchKey);
         }
-        queryIds += "ORDER BY ";
+
+        queryIds = queryIds + conditionId + "ORDER BY ";
         queryBks += "ORDER BY ";
         sortBy = sortBy == null ? "" : sortBy;
         switch (sortBy) {
@@ -74,6 +115,8 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                 queryBks += "bk.dateAdded DESC, bk.timeAdded DESC, bk.title ASC";
         }
 
+        System.out.println("IDs Query: " + queryIds);
+        System.out.println("Books Query: " + queryBks);
         List<Long> ids = getBookIds(pageNum, pageSize, queryIds);
         List<BookTransformer> bookTransformers  = (List<BookTransformer>)em.createQuery(                queryBks)
                 .unwrap(Query.class)
@@ -82,24 +125,8 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                 .setResultTransformer(new BookDetailsResultTransformer())
                 .getResultList();
 
-
         return bookTransformers;
     }
-
-//    public List<BookTransformer> getBooksDetailsPaginationSortById(int pageNum, int pageSize) {
-//        String query= "SELECT bk.id FROM com.library.database_system.domain.Book bk ORDER BY bk.id";
-//        List<Long> ids = getBookIds(pageNum, pageSize, query);
-//
-//        List<BookTransformer> bookTransformers = (List<BookTransformer>)em.createQuery(
-//                queryGetBooksDetailsPagination + "Order BY bk.id")
-//                .unwrap(Query.class)
-//                .setParameterList(1, ids)
-//                .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false)
-//                .setResultTransformer(new BookDetailsResultTransformer())
-//                .getResultList();
-//
-//        return bookTransformers;
-//    }
 
     public List<Long> getBookIds(int pageNum, int pageSize, String query) {
         List<Long> bookIds = em.createQuery(query, Long.class)
