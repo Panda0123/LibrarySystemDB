@@ -52,54 +52,47 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
     public List<BookTransformer> getBooksDetailsPagination(
             int pageNum, int pageSize, String sortBy, String searchKey,
             String filterDateAdded, String filterAuthor, Integer filterFirstPublicationYear,
-            Integer filterLastPublicationYear, String filterClassification ) {
+            Integer filterLastPublicationYear, String filterClassification,
+            String filterPublisher) {
 
         String queryIds = "SELECT bk.id FROM com.library.database_system.domain.Book bk ";
         String queryBks =  queryGetBooksDetailsPagination;
         String conditionId = "";
 
         if (filterDateAdded != null) {
-            conditionId += String.format("bk.dateAdded>=%s ", LocalDate.parse(filterDateAdded));
+            conditionId += String.format("[S]bk.dateAdded>=%s", LocalDate.parse(filterDateAdded));
             queryBks += String.format("AND bk.dateAdded >= %s ", LocalDate.parse(filterDateAdded));
         }
-
         // TODO: filterAuthors
         // filter in query authors and don't include those whose id is not in the
-
         if (filterFirstPublicationYear != null) {
-            conditionId += String.format("bk.publishedDate>='%s' ", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
-            queryBks+= String.format("AND bk.publishedDate >= '%s' ", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
+            conditionId += String.format("[S]bk.publishedDate>='%s'", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
+            queryBks+= String.format("AND bk.publishedDate>='%s' ", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
         }
-
         if (filterLastPublicationYear != null) {
-            conditionId += String.format("bk.publishedDate<='%s' ", LocalDate.of(filterLastPublicationYear, 1, 1).toString());
-            queryBks+= String.format("AND bk.publishedDate <= '%s' ", LocalDate.of(filterLastPublicationYear, 1, 1).toString());
+            conditionId += String.format("[S]bk.publishedDate<='%s'", LocalDate.of(filterLastPublicationYear, 1, 1).toString());
+            queryBks+= String.format("AND bk.publishedDate<='%s' ", LocalDate.of(filterLastPublicationYear, 1, 1).toString());
         }
-
-
-        if (!conditionId.equals("")) {
-            conditionId = "WHERE " + conditionId.strip().replace(" ", " AND ") + " ";
-        }
-
         if (filterClassification != null) {
-            if (!conditionId.equals(""))
-                conditionId += String.format("AND bk.category.name Like '%%%s%%' ", filterClassification);
-            else
-                conditionId += String.format("WHERE bk.category.name Like '%%%s%%' ", filterClassification);
+            conditionId += String.format("[S]bk.category.name Like '%%%s%%'", filterClassification);
             queryBks+= String.format("AND bk.category.name Like '%%%s%%' ", filterClassification);
         }
-
+        if (filterPublisher != null) {
+            conditionId += String.format("[S]bk.publisher.name Like '%%%s%%'", filterPublisher);
+            queryBks+= String.format("AND bk.publisher.name Like '%%%s%%' ", filterPublisher);
+        }
         if (searchKey != null) {
-            if (!conditionId.equals(""))
-                conditionId += String.format("AND bk.title LIKE '%%%s%%' ", searchKey);
-            else
-                conditionId += String.format("WHERE bk.title LIKE '%%%s%%' ", searchKey);
+            conditionId += String.format("[S]bk.title LIKE '%%%s%%'", searchKey);
             queryBks += String.format("AND bk.title LIKE '%%%s%%' ", searchKey);
+        }
+        if (!conditionId.equals("")) {
+            conditionId = "WHERE" + conditionId.replaceFirst("\\[S\\]", " ").replace("[S]", " AND ") + " ";
         }
 
         queryIds = queryIds + conditionId + "ORDER BY ";
         queryBks += "ORDER BY ";
         sortBy = sortBy == null ? "" : sortBy;
+
         switch (sortBy) {
             case "PublishedDate":
                 queryIds += "bk.publishedDate DESC, bk.title ASC";
@@ -115,8 +108,6 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                 queryBks += "bk.dateAdded DESC, bk.timeAdded DESC, bk.title ASC";
         }
 
-        System.out.println("IDs Query: " + queryIds);
-        System.out.println("Books Query: " + queryBks);
         List<Long> ids = getBookIds(pageNum, pageSize, queryIds);
         List<BookTransformer> bookTransformers  = (List<BookTransformer>)em.createQuery(                queryBks)
                 .unwrap(Query.class)

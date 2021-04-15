@@ -12,7 +12,8 @@ public interface CustomBookRepository {
     List<BookTransformer> getBooksDetailsPagination(
             int pageNum, int pageSize, String sortBy, String searchKey,
             String filterDateAdded, String filterAuthor, Integer filterFirstPublicationYear,
-            Integer filterLastPublicationYear, String filterClassification );
+            Integer filterLastPublicationYear, String filterClassification,
+            String filterPublisher);
     // one
     BookTransformer getBookDetails(Long bookId);
 }

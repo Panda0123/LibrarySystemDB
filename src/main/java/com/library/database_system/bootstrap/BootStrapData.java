@@ -214,7 +214,7 @@ public class BootStrapData implements CommandLineRunner  {
 
             // ADD PUBLISHER on BOOKS
             PublishingHouse oRiely = new PublishingHouse(
-                    "O’Reilly Media, Inc.",
+                    "O'Reilly Media, Inc.",
                     "1005 Gravenstein Highway North, Sebastopol, CA 95472");
             PublishingHouse pearson = new PublishingHouse(
                     "Pearson Education, Inc",

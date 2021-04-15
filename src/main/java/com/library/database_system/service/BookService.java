@@ -65,11 +65,13 @@ public class BookService {
     public Collection<BookTransformer> getBooksDetailsPagination(
             int pageNum, int pageSize, String sortBy, String searchKey,
             String filterDateAdded, String filterAuthor, Integer filterFirstPublicationYear,
-            Integer filterLastPublicationYear, String filterClassification ) {
+            Integer filterLastPublicationYear, String filterClassification,
+            String filterPublisher) {
 
         return this.bookRepository.getBooksDetailsPagination(
                 pageNum, pageSize, sortBy, searchKey, filterDateAdded, filterAuthor,
-                filterFirstPublicationYear, filterLastPublicationYear, filterClassification);
+                filterFirstPublicationYear, filterLastPublicationYear, filterClassification,
+                filterPublisher);
     }
 
     public Long getNumberOfBooks(String searchKey) {
