@@ -29,11 +29,11 @@ public interface BookRepository extends JpaRepository<Book, Long>, CustomBookRep
 
     List<BookTransformer> getBooksDetails();
 
-    @Query(value = "SELECT count(bk.id) FROM com.library.database_system.domain.Book bk")
-    Long getNumberOfBooks();
+//    @Query(value = "SELECT count(bk.id) FROM com.library.database_system.domain.Book bk")
+//    Long getNumberOfBooks();
 
-    @Query(value = "SELECT count(bk.id) FROM Book bk WHERE bk.title LIKE :searchKey%")
-    Long getNumberOfBooks(@Param("searchKey") String searchKey);
+//    @Query(value = "SELECT count(bk.id) FROM Book bk WHERE bk.title LIKE :searchKey%")
+//    Long getNumberOfBooks(@Param("searchKey") String searchKey);
 
     @Query(value = "SELECT book FROM Book book")
     Collection<CollectionProj> getBooksCollection();

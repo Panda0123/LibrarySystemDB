@@ -16,4 +16,10 @@ public interface CustomBookRepository {
             String filterPublisher, String filterIsbn, String filterLanguage);
     // one
     BookTransformer getBookDetails(Long bookId);
+
+    // number of result
+    Long getNumberOfBooks(String searchKey, String filterDateAdded, String filterAuthor,
+                          Integer filterFirstPublicationYear, Integer filterLastPublicationYear,
+                          String filterClassification, String filterPublisher,
+                          String filterIsbn, String filterLanguage);
 }

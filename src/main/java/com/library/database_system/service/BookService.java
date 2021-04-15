@@ -74,11 +74,12 @@ public class BookService {
                 filterPublisher, filterIsbn, filterLanguage);
     }
 
-    public Long getNumberOfBooks(String searchKey) {
-        if (searchKey == null)
-            return this.bookRepository.getNumberOfBooks();
-        else
-            return this.bookRepository.getNumberOfBooks(searchKey);
+    public Long getNumberOfBooks(String searchKey, String filterDateAdded, String filterAuthor,
+                                 Integer filterFirstPublicationYear, Integer filterLastPublicationYear, String filterClassification, String filterPublisher,
+                                 String filterIsbn, String filterLanguage) {
+        return this.bookRepository.getNumberOfBooks(searchKey, filterDateAdded, filterAuthor,
+                filterFirstPublicationYear, filterLastPublicationYear, filterClassification, filterPublisher,
+                filterIsbn, filterLanguage);
     }
 
 

@@ -52,8 +52,19 @@ public class BookController {
     }
 
     @GetMapping(path = "all/numBooks")
-    public Long getNumbOfBooks( @RequestParam(required = false) String searchKey ) {
-        return this.bookService.getNumberOfBooks(searchKey);
+    public Long getNumbOfBooks(
+            @RequestParam(required = false) String searchKey,
+            @RequestParam(required = false) String filterDateAdded,
+            @RequestParam(required = false) String filterAuthor,
+            @RequestParam(required = false) Integer filterFirstPublicationYear,
+            @RequestParam(required = false) Integer filterLastPublicationYear,
+            @RequestParam(required = false) String filterClassification,
+            @RequestParam(required = false) String filterPublisher,
+            @RequestParam(required = false) String filterIsbn,
+            @RequestParam(required = false) String filterLanguage) {
+        return this.bookService.getNumberOfBooks(searchKey, filterDateAdded, filterAuthor,
+                filterFirstPublicationYear, filterLastPublicationYear, filterClassification, filterPublisher,
+                filterIsbn, filterLanguage);
     }
 
     @GetMapping(path = "all/copies/{bookId}")
