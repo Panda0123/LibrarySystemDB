@@ -53,7 +53,7 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
             int pageNum, int pageSize, String sortBy, String searchKey,
             String filterDateAdded, String filterAuthor, Integer filterFirstPublicationYear,
             Integer filterLastPublicationYear, String filterClassification,
-            String filterPublisher, String filterIsbn) {
+            String filterPublisher, String filterIsbn, String filterLanguage) {
 
         String queryIds = "SELECT bk.id FROM com.library.database_system.domain.Book bk ";
         String queryBks =  queryGetBooksDetailsPagination;
@@ -88,6 +88,10 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
         if (filterIsbn != null) {
             conditionId += String.format("[S]bk.ISBN='%s'", filterIsbn);
             queryBks += String.format("AND bk.ISBN='%s' ", filterIsbn);
+        }
+        if (filterLanguage != null) {
+            conditionId += String.format("[S]bk.language Like '%%%s%%'", filterLanguage);
+            queryBks+= String.format("AND bk.language Like '%%%s%%' ", filterLanguage);
         }
 
         if (!conditionId.equals("")) {

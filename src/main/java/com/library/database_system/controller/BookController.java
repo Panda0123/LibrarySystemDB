@@ -73,10 +73,12 @@ public class BookController {
             @RequestParam(required = false) Integer filterLastPublicationYear,
             @RequestParam(required = false) String filterClassification,
             @RequestParam(required = false) String filterPublisher,
-            @RequestParam(required = false) String filterIsbn) {
+            @RequestParam(required = false) String filterIsbn,
+            @RequestParam(required = false) String filterLanguage
+            ) {
         return this.bookService.getBooksDetailsPagination(pageNum, pageSize, sortBy, searchKey,
                 filterDateAdded, filterAuthor, filterFirstPublicationYear, filterLastPublicationYear, filterClassification,
-                filterPublisher, filterIsbn);
+                filterPublisher, filterIsbn, filterLanguage);
     }
 
     @PostMapping(path = "admin")

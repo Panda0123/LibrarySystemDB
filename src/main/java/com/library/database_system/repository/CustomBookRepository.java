@@ -13,7 +13,7 @@ public interface CustomBookRepository {
             int pageNum, int pageSize, String sortBy, String searchKey,
             String filterDateAdded, String filterAuthor, Integer filterFirstPublicationYear,
             Integer filterLastPublicationYear, String filterClassification,
-            String filterPublisher, String filterIsbn);
+            String filterPublisher, String filterIsbn, String filterLanguage);
     // one
     BookTransformer getBookDetails(Long bookId);
 }
