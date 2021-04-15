@@ -95,7 +95,7 @@ public class BootStrapData implements CommandLineRunner  {
 
             Book cleanCode2 = new Book(
                     "Discrete Mathematics and Its Application",
-                    " 9780073383095",
+                    "9780073383095",
                     4,
                     4,
                     "English",
