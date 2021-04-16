@@ -40,7 +40,6 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
     }
 
     public List<BookTransformer> getBooksDetails() {
-
         List<BookTransformer> bookTransformers = (List<BookTransformer>)em.createQuery(queryGetBooksDetails)
                 .unwrap(Query.class)
                 .setResultTransformer(new BookDetailsResultTransformer())
@@ -55,54 +54,19 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
             String filterDateAdded, String filterAuthor, Integer filterFirstPublicationYear,
             Integer filterLastPublicationYear, String filterClassification,
             String filterPublisher, String filterIsbn, String filterLanguage) {
-
         String queryIds = "SELECT bk.id FROM com.library.database_system.domain.Book bk ";
         String queryBks =  queryGetBooksDetailsPagination;
-        String conditionId = "";
-
-        if (searchKey != null) {
-            conditionId += String.format("[S]bk.title LIKE '%%%s%%'", searchKey);
-            queryBks += String.format("AND bk.title LIKE '%%%s%%' ", searchKey);
+        String filters = getFilters(searchKey, filterDateAdded, filterAuthor,
+                filterFirstPublicationYear, filterLastPublicationYear,
+                filterClassification, filterPublisher,
+                filterIsbn, filterLanguage);
+        if (!filters.equals("")) {
+            queryIds += "WHERE" + filters.replaceFirst("\\[S\\]", " ").replace("[S]", " AND ") + " ";
+            queryBks += filters.replace("[S]", " AND ") + " ";
         }
-        if (filterDateAdded != null) {
-            conditionId += String.format("[S]bk.dateAdded>='%s'", LocalDate.parse(filterDateAdded));
-            queryBks += String.format("AND bk.dateAdded >= '%s' ", LocalDate.parse(filterDateAdded));
-        }
-        // TODO: filterAuthors
-        // filter in query authors and don't include those whose id is not in the
-        if (filterFirstPublicationYear != null) {
-            conditionId += String.format("[S]bk.publishedDate>='%s'", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
-            queryBks+= String.format("AND bk.publishedDate>='%s' ", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
-        }
-        if (filterLastPublicationYear != null) {
-            conditionId += String.format("[S]bk.publishedDate<='%s'", LocalDate.of(filterLastPublicationYear, 12, 31).toString());
-            queryBks+= String.format("AND bk.publishedDate<='%s' ", LocalDate.of(filterLastPublicationYear, 12, 31).toString());
-        }
-        if (filterClassification != null) {
-            conditionId += String.format("[S]bk.category.name Like '%%%s%%'", filterClassification);
-            queryBks+= String.format("AND bk.category.name Like '%%%s%%' ", filterClassification);
-        }
-        if (filterPublisher != null) {
-            conditionId += String.format("[S]bk.publisher.name Like '%%%s%%'", filterPublisher);
-            queryBks+= String.format("AND bk.publisher.name Like '%%%s%%' ", filterPublisher);
-        }
-        if (filterIsbn != null) {
-            conditionId += String.format("[S]bk.ISBN='%s'", filterIsbn);
-            queryBks += String.format("AND bk.ISBN='%s' ", filterIsbn);
-        }
-        if (filterLanguage != null) {
-            conditionId += String.format("[S]bk.language Like '%%%s%%'", filterLanguage);
-            queryBks+= String.format("AND bk.language Like '%%%s%%' ", filterLanguage);
-        }
-
-        if (!conditionId.equals("")) {
-            conditionId = "WHERE" + conditionId.replaceFirst("\\[S\\]", " ").replace("[S]", " AND ") + " ";
-        }
-
-        queryIds = queryIds + conditionId + "ORDER BY ";
+        queryIds = queryIds + "ORDER BY ";
         queryBks += "ORDER BY ";
         sortBy = sortBy == null ? "" : sortBy;
-
         switch (sortBy) {
             case "PublishedDate":
                 queryIds += "bk.publishedDate DESC, bk.title ASC";
@@ -117,20 +81,20 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                 queryIds += "bk.dateAdded DESC, bk.timeAdded DESC, bk.title ASC";
                 queryBks += "bk.dateAdded DESC, bk.timeAdded DESC, bk.title ASC";
         }
-
         List<Long> ids = getBookIds(pageNum, pageSize, queryIds);
-        List<BookTransformer> bookTransformers  = (List<BookTransformer>)em.createQuery(                queryBks)
+        List<BookTransformer> bookTransformers;
+        bookTransformers  = (List<BookTransformer>)em.createQuery(                queryBks)
                 .unwrap(Query.class)
                 .setParameterList(1, ids)
                 .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false)
                 .setResultTransformer(new BookDetailsResultTransformer())
                 .getResultList();
-
         return bookTransformers;
     }
 
     public List<Long> getBookIds(int pageNum, int pageSize, String query) {
-        List<Long> bookIds = em.createQuery(query, Long.class)
+        List<Long> bookIds;
+         bookIds = em.createQuery(query, Long.class)
                 .setFirstResult(pageNum*pageSize)
                 .setMaxResults(pageSize)
                 .getResultList();
@@ -143,7 +107,6 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                 .setParameter(1, bookId)
                 .setResultTransformer(new BookDetailsResultTransformer())
                 .getSingleResult();
-
         return bookTransformer;
     }
 
@@ -152,36 +115,43 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                           Integer filterFirstPublicationYear, Integer filterLastPublicationYear,
                           String filterClassification, String filterPublisher,
                           String filterIsbn, String filterLanguage) {
-
         String query = "SELECT count(bk) FROM com.library.database_system.domain.Book bk  ";
-        String conditionId = "";
-
-        if (searchKey != null)
-            conditionId += String.format("[S]bk.title LIKE '%%%s%%'", searchKey);
-        if (filterDateAdded != null)
-            conditionId += String.format("[S]bk.dateAdded>='%s'", LocalDate.parse(filterDateAdded));
-        // TODO: filterAuthors
-        // filter in query authors and don't include those whose id is not in the
-        if (filterFirstPublicationYear != null)
-            conditionId += String.format("[S]bk.publishedDate>='%s'", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
-        if (filterLastPublicationYear != null)
-            conditionId += String.format("[S]bk.publishedDate<='%s'", LocalDate.of(filterLastPublicationYear, 12, 31).toString());
-        if (filterClassification != null)
-            conditionId += String.format("[S]bk.category.name Like '%%%s%%'", filterClassification);
-        if (filterPublisher != null)
-            conditionId += String.format("[S]bk.publisher.name Like '%%%s%%'", filterPublisher);
-        if (filterIsbn != null)
-            conditionId += String.format("[S]bk.ISBN='%s'", filterIsbn);
-        if (filterLanguage != null)
-            conditionId += String.format("[S]bk.language Like '%%%s%%'", filterLanguage);
-
-        if (!conditionId.equals(""))
-            conditionId = "WHERE" + conditionId.replaceFirst("\\[S\\]", " ").replace("[S]", " AND ") + " ";
-
-        query += conditionId;
-
-        // Long numOfResult = (Long)em.createQuery(query).unwrap(Query.class).getSingleResult();
-        Long numOfResult = em.createQuery(query, Long.class).getSingleResult();
+        String filters = getFilters(searchKey, filterDateAdded, filterAuthor,
+                filterFirstPublicationYear, filterLastPublicationYear,
+                filterClassification, filterPublisher,
+                filterIsbn, filterLanguage);
+        if (!filters.equals(""))
+            filters = "WHERE" + filters.replaceFirst("\\[S\\]", " ").replace("[S]", " AND ") + " ";
+        query += filters;
+        Long numOfResult;
+        numOfResult = em.createQuery(query, Long.class).getSingleResult();
         return numOfResult;
+    }
+
+    private String getFilters(String searchKey, String filterDateAdded, String filterAuthor,
+                              Integer filterFirstPublicationYear, Integer filterLastPublicationYear,
+                              String filterClassification, String filterPublisher,
+                              String filterIsbn, String filterLanguage) {
+        String filters = "";
+        if (filterAuthor != null)
+            filters += String.format("[S]bk IN (SELECT authored FROM com.library.database_system.domain.Author a INNER JOIN a.booksAuthored authored WHERE concat(a.f_name, ' ', a.m_name, ' ', a.l_name) LIKE '%%%s%%')",
+                    filterAuthor);
+        if (searchKey != null)
+            filters += String.format("[S]bk.title LIKE '%%%s%%'", searchKey);
+        if (filterDateAdded != null)
+            filters += String.format("[S]bk.dateAdded>='%s'", LocalDate.parse(filterDateAdded));
+        if (filterFirstPublicationYear != null)
+            filters += String.format("[S]bk.publishedDate>='%s'", LocalDate.of(filterFirstPublicationYear, 1, 1).toString());
+        if (filterLastPublicationYear != null)
+            filters += String.format("[S]bk.publishedDate<='%s'", LocalDate.of(filterLastPublicationYear, 12, 31).toString());
+        if (filterClassification != null)
+            filters += String.format("[S]bk.category.name Like '%%%s%%'", filterClassification);
+        if (filterPublisher != null)
+            filters += String.format("[S]bk.publisher.name Like '%%%s%%'", filterPublisher);
+        if (filterIsbn != null)
+            filters += String.format("[S]bk.ISBN='%s'", filterIsbn);
+        if (filterLanguage != null)
+            filters += String.format("[S]bk.language Like '%%%s%%'", filterLanguage);
+        return filters;
     }
 }

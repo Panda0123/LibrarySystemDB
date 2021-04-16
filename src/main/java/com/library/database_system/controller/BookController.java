@@ -85,8 +85,7 @@ public class BookController {
             @RequestParam(required = false) String filterClassification,
             @RequestParam(required = false) String filterPublisher,
             @RequestParam(required = false) String filterIsbn,
-            @RequestParam(required = false) String filterLanguage
-            ) {
+            @RequestParam(required = false) String filterLanguage ) {
         return this.bookService.getBooksDetailsPagination(pageNum, pageSize, sortBy, searchKey,
                 filterDateAdded, filterAuthor, filterFirstPublicationYear, filterLastPublicationYear, filterClassification,
                 filterPublisher, filterIsbn, filterLanguage);
