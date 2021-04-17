@@ -363,35 +363,6 @@ public class BookService {
             this.authorRepository.delete(author);
     }
 
-//    @Transactional
-//    public void updateCopies(Book bk, int quantity) {
-//        int size = bk.getBookCopy().size();
-//        int difference = quantity - size;
-//
-//        if (difference > 0) {
-//            // add new copies
-//            BookCopy bookCopy;
-//            for (int i=0; i < difference; i++) {
-//                bookCopy = new BookCopy(size + i + 1, "Available");
-//                this.bookCopyRepository.save(bookCopy);
-//                bk.getBookCopy().add(bookCopy);
-//                bookCopy.setBook(bk);
-//                //this.bookCopyRepository.save(bookCopy);
-//            }
-//        } else {
-//            // remove copies
-//            for (int i = 0; i < Math.abs(difference); i++) {
-//                int finalI = i;
-//                bk.getBookCopy().removeIf(cpy -> {
-//                    if (cpy.getCopy_num() == (size - finalI)) {
-//                        this.bookCopyRepository.delete(cpy);
-//                        return true;
-//                    }
-//                    return false;
-//            });
-//            }
-//        }
-//    }
 
     @Transactional
     public void updateBookCopies(Long bookId, List<BookCopy> bookCopies) {

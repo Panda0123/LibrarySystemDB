@@ -19,6 +19,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, CustomBookRep
     @Query(value = "SELECT * FROM book WHERE book.title = ?1 AND book.edition ?2", nativeQuery = true)
     Optional<Book> findByTitleEdition(String title, int edition);
 
+    @Query(value = "SELECT bk FROM Book bk WHERE bk.ISBN IS NOT NULL AND bk.ISBN = ?1")
     Optional<Book> findByISBN(String ISBN);
 
 

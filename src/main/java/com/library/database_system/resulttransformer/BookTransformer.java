@@ -83,7 +83,8 @@ public class BookTransformer {
         this.dateAdded = (LocalDate)(tuples[aliasToIndexMap.get(DATE_ADDED_ALIAS)]);
         this.language = tuples[aliasToIndexMap.get(LANGUAGE_ALIAS)].toString();
         this.edition = (Integer)(tuples[aliasToIndexMap.get(EDITION_ALIAS)]);
-        this.isbn = tuples[aliasToIndexMap.get(ISBN_ALIAS)].toString();
+        temp = tuples[aliasToIndexMap.get(ISBN_ALIAS)];
+        this.isbn = temp != null ? temp.toString() : null;
         this.summary = tuples[aliasToIndexMap.get(SUMMARY_ALIAS)].toString();
         this.quantity = (Integer)(tuples[aliasToIndexMap.get(QUANTITY_ALIAS)]);
         this.numAvailable = (Integer)(tuples[aliasToIndexMap.get(NUM_AVAILABLE_ALIAS)]);
