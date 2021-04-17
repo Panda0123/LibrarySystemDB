@@ -13,7 +13,9 @@ import java.util.Optional;
 @Repository
 public interface BorrowRepository extends JpaRepository<Borrow, Long> {
 
-    @Query(value = "SELECT borrow FROM Borrow borrow")
+    @Query(value = "SELECT borrow FROM Borrow borrow WHERE borrow.returnedDate IS NULL")
     Collection<BorrowProj> findAllBorrow();
+    @Query(value = "SELECT borrow FROM Borrow borrow WHERE borrow.returnedDate IS NOT NULL")
+    Collection<BorrowProj> findAllReturn();
     Optional<BorrowProj> findBorrowById(Long id);
 }

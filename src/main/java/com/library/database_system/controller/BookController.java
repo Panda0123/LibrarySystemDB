@@ -188,8 +188,13 @@ public class BookController {
     }
 
     @DeleteMapping("admin/borrow/{borrowId}")
-    public void deleteBorrow(@PathVariable("borrowId") Long id) {
-        this.borrowService.deleteBorrow(id);
+    public void returnBorrow(@PathVariable("borrowId") Long id) {
+        this.borrowService.returnBorrow(id);
+    }
+
+    @GetMapping("all/return")
+    public Collection<BorrowProj> findAllReturn() {
+        return this.borrowService.findAllReturn();
     }
 
     @PostMapping("admin/reservation")

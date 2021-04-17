@@ -94,13 +94,14 @@ public class BorrowService {
     }
 
     @Transactional
-    public void deleteBorrow(Long id) {
+    public void returnBorrow(Long id) {
         Borrow borrow = this.borrowRepository.findById(id).orElseThrow(
                 () -> {throw new IllegalStateException(String.format("BorrowID: %d does not exist", id));} );
         borrow.getUser().getBorrowed().remove(borrow);
         borrow.getBookCopy().setBorrower(null);
         borrow.getBookCopy().setStatus("Available");
-        this.borrowRepository.deleteById(id);
+        borrow.setReturnedDate(LocalDate.now());
+//        this.borrowRepository.deleteById(id);
     }
 
     @Transactional
@@ -160,5 +161,9 @@ public class BorrowService {
 
     public Collection<BorrowProj> findAllBorrow() {
         return this.borrowRepository.findAllBorrow();
+    }
+
+    public Collection<BorrowProj> findAllReturn() {
+        return this.borrowRepository.findAllReturn();
     }
 }
