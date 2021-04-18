@@ -67,6 +67,11 @@ public class BookController {
                 filterIsbn, filterLanguage);
     }
 
+    @GetMapping(path = "all/isbn/{isbn}")
+    public boolean doesIsbnExist(@PathVariable("isbn") String isbn) {
+        return this.bookService.doesIsbnExist(isbn);
+    }
+
     @GetMapping(path = "all/copies/{bookId}")
     public Collection<BookCopyProj> getCopies(@PathVariable("bookId") Long bookId) {
         return this.bookService.getCopies(bookId);

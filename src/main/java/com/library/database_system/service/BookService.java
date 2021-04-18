@@ -591,4 +591,8 @@ public class BookService {
         // return bk.getBookCopy();
     }
 
+    public boolean doesIsbnExist(String isbn) {
+        Optional<Book> bkOpt = this.bookRepository.findByISBN(isbn);  // check if there exist same isbn
+        return bkOpt.isPresent();
+    }
 }
