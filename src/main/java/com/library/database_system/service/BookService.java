@@ -27,9 +27,10 @@ public class BookService {
     private final AuthorRepository authorRepository;
     private final BorrowRepository borrowRepository;
     private final BookCopyRepository bookCopyRepository;
+    private final ImageService imageService;
 
     @Autowired
-    public BookService(BookRepository bookRepository, PublishingHouseRepository publishingHouseRepository, CategoryRepository categoryRepository, ShelfRepository shelfRepository, CopyrightRepository copyrightRepository, BookRepository bookRepository1, AuthorRepository authorRepository, BorrowRepository borrowRepository, BookCopyRepository bookCopyRepository) {
+    public BookService(BookRepository bookRepository, PublishingHouseRepository publishingHouseRepository, CategoryRepository categoryRepository, ShelfRepository shelfRepository, CopyrightRepository copyrightRepository, BookRepository bookRepository1, AuthorRepository authorRepository, BorrowRepository borrowRepository, BookCopyRepository bookCopyRepository, ImageService imageService) {
         this.bookRepository = bookRepository;
         this.publishingHouseRepository = publishingHouseRepository;
         this.categoryRepository = categoryRepository;
@@ -38,6 +39,7 @@ public class BookService {
         this.authorRepository = authorRepository;
         this.borrowRepository = borrowRepository;
         this.bookCopyRepository = bookCopyRepository;
+        this.imageService = imageService;
     }
 
    public List<Book> getBooks() {
@@ -207,12 +209,22 @@ public class BookService {
     }
 
     public void deleteBook(Long bookId){
-        boolean doesExist = this.bookRepository.existsById(bookId);
-        if (doesExist) {
-            this.bookRepository.deleteById(bookId);
-        } else {
-            throw new IllegalStateException("BookId:" + bookId + " already exist");
-        }
+        Book bk = this.bookRepository.findById(bookId).orElseThrow(
+                () -> { throw new IllegalStateException("BookId:" + bookId + " already exist");} );
+        Set<Author> authorsTemp = new HashSet<>();
+
+        for (Author auth: bk.getAuthors())
+            authorsTemp.add(auth);
+
+        for (Author author: authorsTemp)
+            removeAuthorFromBook(bk, author);
+
+        removeCopyrightFromBook(bk, bk.getCopyright());
+        removePublisherFromBook(bk, bk.getPublisher());
+        removeShelfFromBook(bk, bk.getShelf());
+        if (!bk.getImageName().equals("empty"))
+            this.imageService.removeImage(bk.getImageName());
+        this.bookRepository.delete(bk);
     }
 
     @Transactional
@@ -386,7 +398,6 @@ public class BookService {
             }
             bookCopySet.add(bkCpy);
         }
-//        prevCopySet.removeIf(cpy -> !bookCopySet.contains(cpy));
         bk.setQuantity(bookCopySet.size());
         int newNumAvailable = 0;
         if (prevCopySet != null )
@@ -411,21 +422,6 @@ public class BookService {
         }
         bk.setNumAvailable(newNumAvailable);
     }
-
-//    @Transactional
-//    public void addBorrowToBook(Long bookId, Long borrowId) {
-//        Book bk = this.bookRepository.findById(bookId).orElseThrow(
-//                () -> {throw new IllegalStateException("BookID:"+ bookId + " does not exist");} );
-//
-//        Borrow borrow = this.borrowRepository.findById(borrowId).orElseThrow(
-//                () -> {throw new IllegalStateException("BorrowID:"+ borrowId + " does not exist");} );
-//
-//        if (!bk.getBorrower().contains(borrow))
-//            bk.getBorrower().add(borrow);
-//
-//        if (!Objects.equals(borrow.getBook(), bk))
-//            borrow.setBook(bk);
-//    }
 
 //    @Transactional
 //    public void removeBorrowFromBook(Long bookId, Long borrowId) {
@@ -458,56 +454,57 @@ public class BookService {
     @Transactional
     private void updatePublisher(Book bk, PublishingHouse newPublisher){
         PublishingHouse prevPublisher = bk.getPublisher();
-        if (prevPublisher != null ) {
-            if (!Objects.equals(prevPublisher, newPublisher)) {
-                prevPublisher.getBooks().remove(bk);
-                if (prevPublisher.getBooks().isEmpty() &&
-                        prevPublisher.getName() != null &&
-                        prevPublisher.getAddress() != null)
-                    this.publishingHouseRepository.delete(prevPublisher);
-            }
-            bk.setPublisher(newPublisher);
-            newPublisher.getBooks().add(bk);
-        } else {
-            bk.setPublisher(newPublisher);
-            newPublisher.getBooks().add(bk);
-        }
+        if (prevPublisher != null && !Objects.equals(prevPublisher, newPublisher))
+            removePublisherFromBook(bk, prevPublisher);
+        bk.setPublisher(newPublisher);
+        newPublisher.getBooks().add(bk);
+    }
 
+    @Transactional
+    public void removePublisherFromBook(Book bk, PublishingHouse publisher) {
+        bk.setPublisher(null);
+        publisher.getBooks().remove(bk);
+
+        if(publisher.getBooks().isEmpty() &&
+                publisher.getName() != null &&
+                publisher.getAddress() != null)
+            this.publishingHouseRepository.delete(publisher);
     }
 
     @Transactional
     private void updateCopyright(Book bk, Copyright newCopyright){
         Copyright prevCopyright = bk.getCopyright();
-        if (prevCopyright != null) {
-            if (!Objects.equals(prevCopyright, newCopyright)){
-                prevCopyright.getBooks().remove(bk);
-                if (prevCopyright.getBooks().isEmpty() && prevCopyright.getName() != null && prevCopyright.getYear() != 0)
-                        this.copyrightRepository.delete(prevCopyright);
-                bk.setCopyright(newCopyright);
-                newCopyright.getBooks().add(bk);
-            }
-        } else {
-            bk.setCopyright(newCopyright);
-            newCopyright.getBooks().add(bk);
-        }
+        if (prevCopyright != null && !Objects.equals(prevCopyright, newCopyright))
+            removeCopyrightFromBook(bk, prevCopyright);
+        bk.setCopyright(newCopyright);
+        newCopyright.getBooks().add(bk);
+    }
 
+    @Transactional
+    public void removeCopyrightFromBook(Book bk, Copyright copyright) {
+        bk.setCopyright(null);
+        copyright.getBooks().remove(bk);
+        if(copyright.getBooks().isEmpty() &&
+                copyright.getName() != null &&
+                copyright.getYear() != 0) // year is set to Integer change this to null
+            this.copyrightRepository.delete(copyright);
     }
 
     @Transactional
     private void updateShelf(Book bk, Shelf newShelf){
         Shelf prevShelf = bk.getShelf();
-        if (prevShelf != null) {
-            if (!Objects.equals(prevShelf, newShelf)) {
-                prevShelf.getBooks().remove(bk);
-                if (prevShelf.getBooks().isEmpty() && prevShelf.getName() != null)
-                    this.shelfRepository.delete(prevShelf);
-                bk.setShelf(newShelf);
-                newShelf.getBooks().add(bk);
-            }
-        } else {
-                bk.setShelf(newShelf);
-                newShelf.getBooks().add(bk);
-            }
+        if (prevShelf != null && !Objects.equals(prevShelf, newShelf))
+            removeShelfFromBook(bk, prevShelf);
+        bk.setShelf(newShelf);
+        newShelf.getBooks().add(bk);
+    }
+
+    @Transactional
+    public void removeShelfFromBook(Book bk, Shelf shelf) {
+        bk.setShelf(null);
+        shelf.getBooks().remove(bk);
+        if(shelf.getBooks().isEmpty() && shelf.getName() != null)
+            this.shelfRepository.delete(shelf);
     }
 
     private PublishingHouse getPublisherWithNameAndAddress(Book bk, String publisherName, String publisherAddress) {

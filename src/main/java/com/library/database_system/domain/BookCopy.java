@@ -26,14 +26,11 @@ public class BookCopy {
     @JoinColumn(name = "book_id")
     private Book originalBook;
 
-    @OneToOne( mappedBy = "bookCopy")
+    @OneToOne( mappedBy = "bookCopy", cascade = CascadeType.REMOVE)
     private Borrow borrower;
 
-    @OneToOne( mappedBy = "bookCopy")
+    @OneToOne( mappedBy = "bookCopy", cascade = CascadeType.REMOVE)
     private Reservation reserved;
-
-//    @OneToMany( mappedBy = "bookCopy")
-//    private Set<Borrow> reservation = new HashSet<>();
 
     public BookCopy() {
 

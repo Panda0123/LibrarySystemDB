@@ -101,6 +101,12 @@ public class BookController {
         return this.bookService.addNewBook(bookDetailsDTO);
     }
 
+    @DeleteMapping(path = "admin/{bookId}")
+    public void deleteBook(@PathVariable(name = "bookId") Long bookId) {
+        this.bookService.deleteBook(bookId);
+    }
+
+
     @PutMapping(path = "admin/{bookId}/authors")
     public void updateBookAuthor(@PathVariable("bookId") Long bookId, @RequestBody List<Author> authors) {
         this.bookService.updateBookAuthor(bookId, authors);
