@@ -11,6 +11,7 @@ import com.library.database_system.repository.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -68,8 +69,6 @@ public class ReservationService {
             this.userService.updateUser(user, userDTO);
         } else {
             user = new User();
-            // TODO: check if user with the same full name already exist
-            // this.userRepository.findByFNameAndMNameAndLName();
             user.setId(userDTO.getId());
             user.setfName(userDTO.getfName());
             user.setmName(userDTO.getmName());
@@ -94,8 +93,15 @@ public class ReservationService {
 
     @Transactional
     private void setBookCopyReservation(BookCopy bookCopy, Reservation reservation){
-        bookCopy.setStatus("Reservation");
+        if (reservation.getDate().equals(LocalDate.now()))
+            bookCopy.setStatus("Reserved");
         bookCopy.setReserved(reservation);
         reservation.setBookCopy(bookCopy);
+    }
+
+    @Transactional
+    public void updateBookCopyForReservation() {
+        Collection<BookCopy> copies = this.reservationRepository.updateBookCopyForReservation();
+        copies.forEach(copy -> copy.setStatus("Reserved"));
     }
 }
