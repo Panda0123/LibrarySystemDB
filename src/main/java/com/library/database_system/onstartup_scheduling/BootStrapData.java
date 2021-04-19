@@ -1,4 +1,4 @@
-package com.library.database_system.bootstrap;
+package com.library.database_system.onstartup_scheduling;
 
 import com.library.database_system.domain.*;
 import com.library.database_system.repository.*;
