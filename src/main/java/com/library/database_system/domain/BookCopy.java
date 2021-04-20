@@ -82,6 +82,7 @@ public class BookCopy {
         return reserved;
     }
 
+
     public void setReserved(Reservation reserved) {
         this.reserved = reserved;
     }

@@ -38,6 +38,7 @@ public class Book {
 
     @Column(length = 50)
     private String language;
+    // TODO: change to INTEGER to allow null value
     private int edition;
     private LocalDate dateAdded;
     private LocalTime timeAdded;

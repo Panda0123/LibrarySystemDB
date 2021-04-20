@@ -112,7 +112,6 @@ public class BookController {
         this.bookService.updateBookAuthor(bookId, authors);
     }
 
-    // TODO: get also the quantity (?) and set the numAvailable when updating book copies
     @PutMapping(path = "admin/{bookId}/copies")
     public void updateBookCopies(@PathVariable("bookId") Long bookId, @RequestBody List<BookCopy> bookCopies) {
         this.bookService.updateBookCopies(bookId, bookCopies);

@@ -33,7 +33,6 @@ public class BookDetailsResultTransformer implements ResultTransformer {
                     id -> new AuthorTransformer(tuple, aliasToIndexMapDct)
             );
 
-            // TODO: add author map so i don't have to create author all the time
             bookTransformer.getAuthors().add( authorTransformer );
 
             return bookTransformer;
