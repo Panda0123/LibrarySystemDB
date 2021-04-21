@@ -65,7 +65,6 @@ public class BookCopy {
         return originalBook;
     }
 
-
     public Book getOriginalBook() {
         return originalBook;
     }

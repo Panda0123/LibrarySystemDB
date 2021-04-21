@@ -13,7 +13,7 @@ public class BookDetailsDTO {
     private String title;
     private LocalDate publishedDate;
     private String language;
-    private int edition;
+    private String edition;
     private String isbn;
     private String summary;
     private int quantity;
@@ -49,7 +49,7 @@ public class BookDetailsDTO {
 
     public BookDetailsDTO(Long bookId, String title,
                           LocalDate publishedDate, String language,
-                          int edition, String isbn,
+                          String edition, String isbn,
                           String summary, int quantity,
                           int numAvailable, String publisherName,
                           String publisherAddress, Long publisherId,
@@ -83,7 +83,7 @@ public class BookDetailsDTO {
     }
 
     public BookDetailsDTO(String title, LocalDate publishedDate,
-                          String language, int edition,
+                          String language, String edition,
                           String isbn, String summary,
                           int quantity, int numAvailable,
                           String publisherName, String publisherAddress,
@@ -107,7 +107,7 @@ public class BookDetailsDTO {
     }
 
     public BookDetailsDTO(String title, LocalDate publishedDate,
-                          String language, int edition,
+                          String language, String edition,
                           String isbn, String summary,
                           int quantity, int numAvailable,
                           String publisherName, String publisherAddress,
@@ -224,11 +224,11 @@ public class BookDetailsDTO {
         this.copyrightYear = copyrightYear;
     }
 
-    public int getEdition() {
+    public String getEdition() {
         return edition;
     }
 
-    public void setEdition(int edition) {
+    public void setEdition(String edition) {
         this.edition = edition;
     }
 

@@ -7,7 +7,7 @@ public interface CollectionProj {
     String getTitle();
     @Value("#{target.ISBN}")
     String getIsbn();
-    Integer getEdition();
+    String getEdition();
     String getLanguage();
     @Value("#{target.category.name}")
     String getClassification();

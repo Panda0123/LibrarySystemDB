@@ -48,7 +48,7 @@ public class BookTransformer {
     private LocalDate publishedDate;
     private LocalDate dateAdded;
     private String language;
-    private int edition;
+    private String edition;
     private String isbn;
     private String summary;
     private String imageName;
@@ -82,7 +82,8 @@ public class BookTransformer {
         this.publishedDate = (LocalDate)(tuples[aliasToIndexMap.get(PUBLISHED_DATE_ALIAS)]);
         this.dateAdded = (LocalDate)(tuples[aliasToIndexMap.get(DATE_ADDED_ALIAS)]);
         this.language = tuples[aliasToIndexMap.get(LANGUAGE_ALIAS)].toString();
-        this.edition = (Integer)(tuples[aliasToIndexMap.get(EDITION_ALIAS)]);
+        temp = tuples[aliasToIndexMap.get(EDITION_ALIAS)];
+        this.edition = temp != null ? temp.toString() : null;
         temp = tuples[aliasToIndexMap.get(ISBN_ALIAS)];
         this.isbn = temp != null ? temp.toString() : null;
         this.summary = tuples[aliasToIndexMap.get(SUMMARY_ALIAS)].toString();
@@ -145,11 +146,11 @@ public class BookTransformer {
         return EDITION_ALIAS;
     }
 
-    public int getEdition() {
+    public String getEdition() {
         return edition;
     }
 
-    public void setEdition(int edition) {
+    public void setEdition(String edition) {
         this.edition = edition;
     }
 

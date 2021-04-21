@@ -84,7 +84,7 @@ public class BootStrapData implements CommandLineRunner  {
                     3,
                     3,
                     "English",
-                    1,
+                    "1",
                     LocalDate.now(),
                     LocalDate.of(2017, 6, 15),
                     summary,
@@ -99,7 +99,7 @@ public class BootStrapData implements CommandLineRunner  {
                     4,
                     4,
                     "English",
-                    7,
+                    "7",
                     LocalDate.now(),
                     LocalDate.of(2012, 6, 15),
                     summary,
@@ -112,7 +112,7 @@ public class BootStrapData implements CommandLineRunner  {
                     10,
                     10,
                     "English",
-                    1,
+                    "1",
                     LocalDate.now(),
                     LocalDate.of(2019, 4, 20),
                     summary,
@@ -171,9 +171,6 @@ public class BootStrapData implements CommandLineRunner  {
             // saving on database
             bookRepository.saveAll(List.of(cleanCode, cleanCode2, tSP));
             authorRepository.saveAll(List.of(robert, timothy, michael));
-//            System.out.println("Started BootStrap");
-//            System.out.println("Number of Books:" + bookRepository.count());
-//            System.out.println("Number of Authors:" + authorRepository.count());
 
             // USERS and BORROW
             User jamsed = new User("20250014549", "Albert", "Roke" , "Raul", "US", "Student");
@@ -329,8 +326,5 @@ public class BootStrapData implements CommandLineRunner  {
                 this.adminService.addNewAdmin(admin);
             }
         }
-
-        // EDITING
-        System.out.println("Done..................................");
     }
 }

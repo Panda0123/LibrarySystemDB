@@ -36,14 +36,14 @@ public class Book {
     private int numAvailable;
     private int quantity;
 
-    @Column(length = 50)
+    @Column(length = 100)
     private String language;
-    // TODO: change to INTEGER to allow null value
-    private int edition;
+    private String edition;
     private LocalDate dateAdded;
     private LocalTime timeAdded;
 
     private LocalDate publishedDate;
+
     @Column(length = 10)
     private String imageName;
 
@@ -52,10 +52,6 @@ public class Book {
 
     @ManyToMany( mappedBy = "booksAuthored")
     private Set<Author> authors = new HashSet<>();
-
-    // TODO: transfer to the bookCopy so it become one to one relationship
-//    @OneToMany( mappedBy = "book")
-//    private Set<Borrow> borrower = new HashSet<>();
 
     @OneToMany( mappedBy = "originalBook", cascade = CascadeType.ALL)
     private Set<BookCopy> bookCopy = new HashSet<>();
@@ -80,7 +76,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(String title, String ISBN, int numAvailable, int quantity, String language, int edition, LocalDate dateAdded,  LocalDate publishedDate, String summary, String imageName, LocalTime timeAdded) {
+    public Book(String title, String ISBN, int numAvailable, int quantity, String language, String edition, LocalDate dateAdded,  LocalDate publishedDate, String summary, String imageName, LocalTime timeAdded) {
         this.title = title;
         this.ISBN = ISBN;
         this.numAvailable = numAvailable;
@@ -148,11 +144,11 @@ public class Book {
         this.summary = summary;
     }
 
-    public int getEdition() {
+    public String getEdition() {
         return edition;
     }
 
-    public void setEdition(int edition) {
+    public void setEdition(String edition) {
         this.edition = edition;
     }
 
