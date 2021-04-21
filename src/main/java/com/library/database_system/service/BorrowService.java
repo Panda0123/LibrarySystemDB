@@ -70,7 +70,7 @@ public class BorrowService {
             user.setlName(userDTO.getlName());
             user.setUserType(userDTO.getType());
             user.setAddress(userDTO.getAddress());
-            this.userService.updateUserSection(user, userDTO);
+            this.userService.updateUserSectionAndGradeLevel(user, userDTO);
             this.userRepository.save(user);
         }
         newBorrow = new Borrow(bkCpy, user, borrowDTO.getIssueDate(), borrowDTO.getDueDate());

@@ -19,7 +19,7 @@ public class GradeLevel {
             generator = "gradeLevel_sequence"
     )
     public Long id;
-    public int level;
+    public Integer level;
 
     @OneToMany(mappedBy = "grade_level")
     public Set<Section> sections = new HashSet<>();
@@ -27,7 +27,7 @@ public class GradeLevel {
     public GradeLevel() {
     }
 
-    public GradeLevel(int level) {
+    public GradeLevel(Integer level) {
         this.level = level;
     }
 
@@ -35,11 +35,11 @@ public class GradeLevel {
         return id;
     }
 
-    public int getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 

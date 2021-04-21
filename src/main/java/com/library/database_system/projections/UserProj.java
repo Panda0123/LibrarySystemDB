@@ -1,5 +1,6 @@
 package com.library.database_system.projections;
 
+import com.library.database_system.dtos.GradeLevelDTO;
 import org.springframework.beans.factory.annotation.Value;
 
 public interface UserProj {
@@ -15,11 +16,20 @@ public interface UserProj {
     String getType();
     @Value("#{target.section}")
     SectionDTO getSectionDTO();
+    @Value("#{target.section.grade_level}")
+    GradeLevelDTO getGradeLevelDTO();
 
     interface SectionDTO {
         @Value("#{target.name}")
         String getName();
         @Value("#{target.id}")
-        String getId();
+        Long getId();
+    }
+
+    interface GradeLevelDTO {
+        @Value("#{target.level}")
+        Integer getLevel();
+        @Value("#{target.id}")
+        Long getId();
     }
 }

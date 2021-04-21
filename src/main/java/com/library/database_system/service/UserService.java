@@ -1,7 +1,9 @@
 package com.library.database_system.service;
 
+import com.library.database_system.domain.GradeLevel;
 import com.library.database_system.domain.Section;
 import com.library.database_system.domain.User;
+import com.library.database_system.dtos.SectionDTO;
 import com.library.database_system.dtos.UserDTO;
 import com.library.database_system.projections.UserProj;
 import com.library.database_system.repository.BookRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -142,23 +145,58 @@ public class UserService {
             user.setUserType(userDTO.getType());
         if (!user.getAddress().equals(userDTO.getAddress()))
             user.setAddress(userDTO.getAddress());
-        if (!user.getSection().getName().equals(userDTO.getSectionDTO().getName()))
-            updateUserSection(user, userDTO);
+        if (!userDTO.getSectionDTO().getName().equals(user.getSection().getName()) ||
+                userDTO.getGradeLevelDTO().getLevel() != user.getSection().getGradeLevel().getLevel()){
+            updateUserSectionAndGradeLevel(user, userDTO);
+        }
     }
 
     @Transactional
-    public void updateUserSection(User user, UserDTO userDTO) {
-        Optional<Section> sectionOpt = this.sectionRepository.findByName(userDTO.getSectionDTO().getName());
+    public void updateUserSectionAndGradeLevel(User user, UserDTO userDTO) {
+
+        Optional<GradeLevel> gradeLevelOpt = this.gradeLevelRepository.findByLevel(userDTO.getGradeLevelDTO().getLevel());
+        GradeLevel gradeLevel = null;
+        if (gradeLevelOpt.isPresent()) {
+            gradeLevel = gradeLevelOpt.get();
+        } else {
+            gradeLevel = new GradeLevel();
+            gradeLevel.setLevel(userDTO.getGradeLevelDTO().getLevel());
+            this.gradeLevelRepository.save(gradeLevel);
+        }
+
+        // check section
+        if (user.getSection() != null) {
+            Section prevSection = user.getSection();
+            removeSectionFromUser(prevSection, user);
+        }
+        SectionDTO sectionDTO = userDTO.getSectionDTO();
+        List<Section> sections = gradeLevel.getSections()
+                .stream()
+                .filter(sectionTemp -> sectionTemp.getName().equals(sectionDTO.getName()))
+                .collect(Collectors.toList());
         Section section = null;
-        if (sectionOpt.isPresent()) {
-            section = sectionOpt.get();
+        if (!sections.isEmpty()) {
+            section = sections.get(0);
         } else {
             section = new Section();
-            section.setName(userDTO.getSectionDTO().getName());
-            // TODO add user text box UI for GradeLevel and check if gradelevel exist or not
-            section.setGradeLevel(this.gradeLevelRepository.getOne(1L));
+            section.setName(sectionDTO.getName());
+            section.setGradeLevel(gradeLevel);
             this.sectionRepository.save(section);
         }
         user.setSection(section);
     }
+
+    @Transactional
+    public void removeSectionFromUser(Section section, User user) {
+        section.getUsers().remove(user);
+        user.setSection(null);
+        if (section.getUsers().isEmpty()) {
+            GradeLevel gradeLevel = section.getGradeLevel();
+            gradeLevel.getSections().remove(section);
+            if (gradeLevel.getSections().isEmpty())
+                this.gradeLevelRepository.delete(gradeLevel);
+            this.sectionRepository.delete(section);
+        }
+    }
+
 }

@@ -24,4 +24,5 @@ public class SectionDTO {
     public void setName(String name) {
         this.name = name;
     }
+
 }

@@ -8,8 +8,9 @@ public class UserDTO {
     private String type;
     private String address;
     private SectionDTO sectionDTO;
+    private GradeLevelDTO gradeLevelDTO;
 
-    public UserDTO(String id, String fName, String mName, String lName, String type, String address, SectionDTO sectionDTO) {
+    public UserDTO(String id, String fName, String mName, String lName, String type, String address, SectionDTO sectionDTO, GradeLevelDTO gradeLevelDTO) {
         this.id = id;
         this.fName = fName;
         this.mName = mName;
@@ -17,6 +18,7 @@ public class UserDTO {
         this.type = type;
         this.address = address;
         this.sectionDTO = sectionDTO;
+        this.gradeLevelDTO = gradeLevelDTO;
     }
 
     public String getId() {
@@ -69,6 +71,14 @@ public class UserDTO {
 
     public SectionDTO getSectionDTO() {
         return sectionDTO;
+    }
+
+    public GradeLevelDTO getGradeLevelDTO() {
+        return gradeLevelDTO;
+    }
+
+    public void setGradeLevelDTO(GradeLevelDTO gradeLevelDTO) {
+        this.gradeLevelDTO = gradeLevelDTO;
     }
 
     public void setSectionDTO(SectionDTO sectionDTO) {

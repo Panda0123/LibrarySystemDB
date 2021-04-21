@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface GradeLevelRepository extends JpaRepository<GradeLevel, Long> {
 
-    Optional<GradeLevel> findByLevel(int level);
+    Optional<GradeLevel> findByLevel(Integer level);
 }

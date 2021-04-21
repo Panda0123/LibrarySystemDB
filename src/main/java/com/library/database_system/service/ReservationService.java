@@ -75,7 +75,7 @@ public class ReservationService {
             user.setlName(userDTO.getlName());
             user.setUserType(userDTO.getType());
             user.setAddress(userDTO.getAddress());
-            this.userService.updateUserSection(user, userDTO);
+            this.userService.updateUserSectionAndGradeLevel(user, userDTO);
             this.userRepository.save(user);
         }
         newReservation = new Reservation(bkCpy, user, reservationDTO.getReservedDate());
