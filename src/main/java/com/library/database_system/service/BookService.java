@@ -85,18 +85,18 @@ public class BookService {
     }
 
 
-    public void addNewBook(Book book) {
-        this.bookRepository.findById(book.getId()).orElseThrow(
-                () -> {throw  new IllegalStateException("BookId:" + book.getId() + " already exist");});
-
-        this.bookRepository.findByISBN(book.getISBN()).orElseThrow(
-                () -> {throw  new IllegalStateException("ISBN:" + book.getISBN() + " already exist");});
-
-        this.bookRepository.findByTitleEdition(book.getTitle(), book.getEdition()).orElseThrow(
-                () -> {throw  new IllegalStateException("Tile:" + book.getTitle() +
-                        " Edition:" + book.getEdition()  + " already exist");} );
-        this.bookRepository.save(book);
-    }
+//    public void addNewBook(Book book) {
+//        this.bookRepository.findById(book.getId()).orElseThrow(
+//                () -> {throw  new IllegalStateException("BookId:" + book.getId() + " already exist");});
+//
+//        this.bookRepository.findByISBN(book.getISBN()).orElseThrow(
+//                () -> {throw  new IllegalStateException("ISBN:" + book.getISBN() + " already exist");});
+//
+//        this.bookRepository.findByTitleEdition(book.getTitle(), book.getEdition()).orElseThrow(
+//                () -> {throw  new IllegalStateException("Tile:" + book.getTitle() +
+//                        " Edition:" + book.getEdition()  + " already exist");} );
+//        this.bookRepository.save(book);
+//    }
 
 
     public Long addNewBook(BookDetailsDTO bkDetailsPOJO)  {
@@ -261,9 +261,8 @@ public class BookService {
                         bk.setImageName(value);
                     break;
                 case "edition":
-                    parseValInt = value != null && value != "" ? Integer.parseInt(value) : 1;
-                    if (0 < parseValInt && bk.getEdition() != parseValInt)
-                        bk.setEdition(parseValInt);
+                    if (!Objects.equals(bk.getEdition(), value))
+                        bk.setEdition(value);
                     break;
                 case "dateAdded":
                     parseValLocalDate = value != null && value != "" ? LocalDate.parse(value) : null;
