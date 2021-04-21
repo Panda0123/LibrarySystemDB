@@ -53,21 +53,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/author/admin/**", "/api/v1/user/admin/**", "/api/v1/book/admin/**", "/api/v1/category/admin/**", "/api/v1/images/admin/**").hasRole(ADMIN.name())
                 .anyRequest()
                 .authenticated();
-//                .and()
-//                .formLogin()
-//                    .loginPage("")
-//                    .loginProcessingUrl("api/v1/admin/perform_login")
-//                    .failureForwardUrl("api/v1/admin/fail_login")
-//                    // .failureUrl("/fail_login")
-//                .and()
-//                .logout()
-//                    .logoutUrl("/logout")
-//                    .clearAuthentication(true)
-//                    .invalidateHttpSession(true)
-//                    .deleteCookies("JSESSIONID");
-
-//                .and()
-//                .rememberMe();  // default to 2 weeks
     }
 
     @Override

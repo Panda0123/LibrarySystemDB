@@ -85,20 +85,6 @@ public class BookService {
     }
 
 
-//    public void addNewBook(Book book) {
-//        this.bookRepository.findById(book.getId()).orElseThrow(
-//                () -> {throw  new IllegalStateException("BookId:" + book.getId() + " already exist");});
-//
-//        this.bookRepository.findByISBN(book.getISBN()).orElseThrow(
-//                () -> {throw  new IllegalStateException("ISBN:" + book.getISBN() + " already exist");});
-//
-//        this.bookRepository.findByTitleEdition(book.getTitle(), book.getEdition()).orElseThrow(
-//                () -> {throw  new IllegalStateException("Tile:" + book.getTitle() +
-//                        " Edition:" + book.getEdition()  + " already exist");} );
-//        this.bookRepository.save(book);
-//    }
-
-
     public Long addNewBook(BookDetailsDTO bkDetailsPOJO)  {
         Book newBk = new Book();
 

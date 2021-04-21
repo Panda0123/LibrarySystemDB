@@ -1,7 +1,5 @@
 package com.library.database_system.auth;
 
-import com.google.common.collect.Lists;
-import com.library.database_system.domain.Admin;
 import com.library.database_system.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
