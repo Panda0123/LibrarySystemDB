@@ -65,7 +65,7 @@ public class BookTransformer {
     // copyright
     private Long copyrightId;
     private String copyrightName;
-    private int copyrightYear;
+    private Short copyrightYear;
     // shelf
     private Long shelfId;
     private String shelfName;
@@ -106,7 +106,7 @@ public class BookTransformer {
         // copyright
         temp  = tuples[aliasToIndexMap.get(COPYRIGHT_NAME_ALIAS)];
         this.copyrightName = temp != null ? temp.toString() : null;
-        this.copyrightYear = (int)(tuples[aliasToIndexMap.get(COPYRIGHT_YEAR_ALIAS)]);
+        this.copyrightYear = (Short) tuples[aliasToIndexMap.get(COPYRIGHT_YEAR_ALIAS)];
         this.copyrightId = Long.parseLong(tuples[aliasToIndexMap.get(COPYRIGHT_ID_ALIAS)].toString());
 
         // shelf
@@ -274,11 +274,11 @@ public class BookTransformer {
         this.copyrightName = copyrightName;
     }
 
-    public int getCopyrightYear() {
+    public Short getCopyrightYear() {
         return copyrightYear;
     }
 
-    public void setCopyrightYear(int copyrightYear) {
+    public void setCopyrightYear(Short copyrightYear) {
         this.copyrightYear = copyrightYear;
     }
 

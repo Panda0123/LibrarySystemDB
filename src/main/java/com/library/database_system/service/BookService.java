@@ -272,7 +272,7 @@ public class BookService {
                     parseValLocalDate = value != null && value != "" ? LocalDate.parse(value) : null;
                     bk.setPublished(parseValLocalDate);
                     break;
-                case "category":
+                case "categoryId":
                     Category cat = this.categoryRepository.findById(Long.parseLong(value)).orElseThrow(
                             () -> {throw new IllegalStateException("CategoryID:"+ value + " does not exist");});
                     this.updateCategory(bk, cat);
@@ -285,35 +285,31 @@ public class BookService {
                     break;
                 case "publisherAddress":
                 case "publisherName":
-                    if (!publisherDone) {
-                        String publisherAddr = attrs.containsKey("publisherAddress") ?  attrs.get("publisherAddress") : null;
-                        String publisherName = attrs.containsKey("publisherName") ?  attrs.get("publisherName") : null;
-                        publisher = this.getPublisherWithNameAndAddress(bk, publisherName, publisherAddr);
-                        if (publisher.getId() == null || !this.publishingHouseRepository.existsById(publisher.getId()))
-                            this.publishingHouseRepository.save(publisher);
-                        this.updatePublisher(bk, publisher);
-                        publisherDone = true;
-                    }
+                    if (publisherDone)
+                        break;
+                    String publisherAddr = attrs.containsKey("publisherAddress") ?  attrs.get("publisherAddress") : null;
+                    String publisherName = attrs.containsKey("publisherName") ?  attrs.get("publisherName") : null;
+                    publisher = this.getPublisherWithNameAndAddress(bk, publisherName, publisherAddr);
+                    if (publisher.getId() == null || !this.publishingHouseRepository.existsById(publisher.getId()))
+                        this.publishingHouseRepository.save(publisher);
+                    this.updatePublisher(bk, publisher);
+                    publisherDone = true;
                     break;
                 case "copyrightYear":
                 case "copyrightName":
-                    if (!copyrightDone) {
-                        String copyrightName = attrs.containsKey("copyrightName") ?  attrs.get("copyrightName") : null;
-                        int copyrightYear = 0;
-                        if (attrs.containsKey("copyrightYear")) {
-                            if (attrs.get("copyrightYear") != "")
-                                copyrightYear = Integer.parseInt(attrs.get("copyrightYear"));
-                            else
-                                copyrightYear =  0;
-                        } else {
-                            copyrightYear =  -1;
-                        }
-                        copyright = this.getCopyrightWithNameAndYear(bk, copyrightName, copyrightYear);
-                        if (copyright.getId() == null || !this.copyrightRepository.existsById(copyright.getId()))
-                            this.copyrightRepository.save(copyright);
-                        this.updateCopyright(bk, copyright);
-                        copyrightDone = true;
-                    }
+                    if (copyrightDone)
+                        break;
+                    String copyrightName = attrs.containsKey("copyrightName")
+                            ?  attrs.get("copyrightName").equals("") ? null : attrs.get("copyrightName")
+                            : bk.getCopyright().getName();
+                    Short copyrightYear = attrs.containsKey("copyrightYear")
+                            ?  attrs.get("copyrightYear").equals("") ? null : Short.parseShort(attrs.get("copyrightYear"))
+                            : bk.getCopyright().getYear();
+                    copyright = this.getCopyrightWithNameAndYear(bk, copyrightName, copyrightYear);
+                    if (copyright.getId() == null || !this.copyrightRepository.existsById(copyright.getId()))
+                        this.copyrightRepository.save(copyright);
+                    this.updateCopyright(bk, copyright);
+                    copyrightDone = true;
                     break;
             }
         }
@@ -422,31 +418,13 @@ public class BookService {
         bk.setNumAvailable(newNumAvailable);
     }
 
-//    @Transactional
-//    public void removeBorrowFromBook(Long bookId, Long borrowId) {
-//        Book bk = this.bookRepository.findById(bookId).orElseThrow(
-//                () -> {throw new IllegalStateException("BookID:"+ bookId + " does not exist");} );
-//        Borrow borrow = this.borrowRepository.findById(borrowId).orElseThrow(
-//                () -> {throw new IllegalStateException("BorrowID:"+ borrowId + " does not exist");} );
-//
-//        if (bk.getBorrower().contains(borrow)) {
-//            bk.getBorrower().remove(borrow);
-//        }
-//    }
-
     @Transactional
     private void updateCategory(Book bk, Category newCategory){
         Category prevCategory = bk.getCategory();
-        if (prevCategory != null ) {
-            if (!Objects.equals(prevCategory, newCategory)) {
-                prevCategory.getBooks().remove(bk);
-                bk.setCategory(newCategory);
-            }
-        } else {
-            newCategory.getBooks().add(bk);
-            bk.setCategory(newCategory);
-        }
-
+        if (prevCategory != null )
+            prevCategory.getBooks().remove(bk);
+        newCategory.getBooks().add(bk);
+        bk.setCategory(newCategory);
     }
 
 
@@ -535,31 +513,16 @@ public class BookService {
         return publisher;
     }
 
-    private Copyright getCopyrightWithNameAndYear(Book bk, String copyrightName, int copyrightYear) {
+    private Copyright getCopyrightWithNameAndYear(Book bk, String copyrightName, Short copyrightYear) {
+        Optional<Copyright> copyrightOpt = this.copyrightRepository.findByNameAndYear(copyrightName, copyrightYear);
         Copyright copyright = null;
-        Optional<Copyright> copyrightOpt = null;
-
-        if (copyrightName != null && copyrightYear != -1) {
-            copyrightOpt = this.copyrightRepository.findByNameAndYear(copyrightName, copyrightYear);
-        } else if (copyrightName != null && copyrightYear == -1) {
-            copyrightYear = bk.getCopyright() != null ? bk.getCopyright().getYear(): null;
-            copyrightOpt = this.copyrightRepository.findByNameAndYear(copyrightName, copyrightYear);
-        } else if (copyrightName == null && copyrightYear != -1) {
-            copyrightName = bk.getCopyright() != null ? bk.getCopyright().getName() : null;
-            copyrightOpt = this.copyrightRepository.findByNameAndYear(copyrightName, copyrightYear);
+        if (copyrightOpt.isPresent()) {
+            copyright = copyrightOpt.get();
         } else {
-            copyrightOpt = this.copyrightRepository.findByNameAndYear(null, 0);
-        }
-
-        if (copyrightOpt != null) {
-            if (copyrightOpt.isPresent()) {
-                copyright = copyrightOpt.get();
-            } else {
-                // new
-                copyright = new Copyright();
-                copyright.setName(copyrightName);
-                copyright.setYear(copyrightYear);
-            }
+            // new
+            copyright = new Copyright();
+            copyright.setName(copyrightName);
+            copyright.setYear(copyrightYear);
         }
         return copyright;
     }

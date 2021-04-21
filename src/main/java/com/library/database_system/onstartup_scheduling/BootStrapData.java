@@ -286,8 +286,8 @@ public class BootStrapData implements CommandLineRunner  {
             bookRepository.saveAll(List.of(cleanCode, cleanCode2, tSP));
 
             // COPYRIGHT
-            Copyright pearsonCopyright = new Copyright("Pearson Education, Inc.", 2009);
-            Copyright michaelCopyright = new Copyright("Michael Y. Yang", 2011);
+            Copyright pearsonCopyright = new Copyright("Pearson Education, Inc.", (short) 2009);
+            Copyright michaelCopyright = new Copyright("Michael Y. Yang", (short)2011);
             copyrightRepository.saveAll(List.of(pearsonCopyright, michaelCopyright));  // not necessary
 
             pearsonCopyright.getBooks().addAll(List.of(cleanCode, cleanCode2));

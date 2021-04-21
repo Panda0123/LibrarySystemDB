@@ -129,7 +129,6 @@ public class BookController {
             @RequestParam(required = false) String imageName,
 
             @RequestParam(required = false) String categoryId,
-            @RequestParam(required = false) String categoryName,
 
             @RequestParam(required = false) String shelfName,
 
@@ -160,8 +159,6 @@ public class BookController {
         // copyright
         if (categoryId != null)
             attrs.put("categoryId", categoryId);
-        if (categoryName != null)
-            attrs.put("categoryName", categoryName);
 
         // publisher
         if (publisherName != null)

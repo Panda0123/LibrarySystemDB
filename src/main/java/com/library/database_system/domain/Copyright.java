@@ -14,19 +14,19 @@ public class Copyright {
             sequenceName = "copyright_sequence"
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "copyright_sequence")
-    public Long id;
+    private Long id;
 
     @OneToMany( mappedBy = "copyright")
     Set<Book> books = new HashSet<>();
 
-    public String name;
+    private String name;
 
-    public int year;
+    private Short year;
 
     public Copyright() {
     }
 
-    public Copyright(String name, int year) {
+    public Copyright(String name, Short year) {
         this.name = name;
         this.year = year;
     }
@@ -47,11 +47,11 @@ public class Copyright {
         this.name = name;
     }
 
-    public int getYear() {
+    public Short getYear() {
         return year;
     }
 
-    public void setYear(int yr) {
+    public void setYear(Short yr) {
         this.year = yr;
     }
 

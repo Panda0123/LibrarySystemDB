@@ -32,7 +32,7 @@ public class BookDetailsDTO {
     // copyright
     private Long copyrightId;
     private String copyrightName;
-    private int copyrightYear;
+    private Short copyrightYear;
 
     // shelf
     private Long shelfId;
@@ -55,7 +55,7 @@ public class BookDetailsDTO {
                           String publisherAddress, Long publisherId,
                           Long categoryId, String categoryName,
                           Long copyrightId, String copyrightName,
-                          int copyrightYear, Long shelfId,
+                          Short copyrightYear, Long shelfId,
                           String shelfName, Set<AuthorDTO> authors,
                           String imageName, Set<BookCopyDTO> copies) {
         this.bookId = bookId;
@@ -88,7 +88,7 @@ public class BookDetailsDTO {
                           int quantity, int numAvailable,
                           String publisherName, String publisherAddress,
                           Long categoryId, String copyrightName,
-                          int copyrightYear, String shelfName,
+                          Short copyrightYear, String shelfName,
                           String imageName) {
         this.title = title;
         this.publishedDate = publishedDate;
@@ -112,7 +112,7 @@ public class BookDetailsDTO {
                           int quantity, int numAvailable,
                           String publisherName, String publisherAddress,
                           Long categoryId, String copyrightName,
-                          int copyrightYear, String shelfName,
+                          Short copyrightYear, String shelfName,
                           Set<AuthorDTO> authors, String imageName) {
         this.title = title;
         this.publishedDate = publishedDate;
@@ -216,11 +216,11 @@ public class BookDetailsDTO {
         this.copyrightName = copyrightName;
     }
 
-    public int getCopyrightYear() {
+    public Short getCopyrightYear() {
         return copyrightYear;
     }
 
-    public void setCopyrightYear(int copyrightYear) {
+    public void setCopyrightYear(Short copyrightYear) {
         this.copyrightYear = copyrightYear;
     }
 

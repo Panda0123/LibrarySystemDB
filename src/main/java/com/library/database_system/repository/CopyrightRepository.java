@@ -11,6 +11,5 @@ public interface CopyrightRepository extends JpaRepository<Copyright, Long> {
 
     Optional<Copyright> findByName(String name);
 
-    Optional<Copyright> findByNameAndYear(String name, int year);
-    Optional<Copyright> findByNameAndYear(String name, String year); // for null
+    Optional<Copyright> findByNameAndYear(String name, Short year);
 }
