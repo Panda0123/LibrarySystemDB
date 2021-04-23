@@ -54,4 +54,8 @@ public class AdminService {
         admin.setUsername(adminDTO.getUsername());
         admin.setPassword(passwordEncoder.encode(adminDTO.getPassword()));
     }
+
+    public boolean isEmpty() {
+        return this.adminRepository.findAll().isEmpty();
+    }
 }

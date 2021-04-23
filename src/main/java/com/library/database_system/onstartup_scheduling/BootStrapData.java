@@ -322,10 +322,10 @@ public class BootStrapData implements CommandLineRunner  {
     //            this.gradeLevelService.addNewGradeLevel(gradeLevel);
     //        }
             // ADD ADMIN
-            Admin admin = new Admin("admin", "admin");
-            if (!this.adminService.contain(admin)) {
-                this.adminService.addNewAdmin(admin);
-            }
+//            Admin admin = new Admin("admin", "admin");
+//            if (!this.adminService.contain(admin)) {
+//                this.adminService.addNewAdmin(admin);
+//            }
         }
     }
 }
