@@ -15,11 +15,7 @@ public interface ReservationProj {
     @Value("#{target.date}")
     LocalDate getReservedDate();
 
-    //this
-//    @Value("#{target.bookCopy}")
-//    BookCopyProj getBookCopyDTO();
 
-    // or all this
     @Value("#{target.bookCopy.id}")
     Long getBkCpyId();
 
@@ -31,4 +27,14 @@ public interface ReservationProj {
 
     @Value("#{target.bookCopy.originalBook.id}")
     Long getOriginalBookId();
+
+    @Value("#{target.bookCopy.originalBook.ISBN}")
+    String getIsbn();
+
+    @Value("#{target.bookCopy.originalBook.edition}")
+    String getEdition();
+
+    @Value("#{target.bookCopy.originalBook.imageName}")
+    String getImageName();
+
 }

@@ -32,4 +32,13 @@ public interface BorrowProj {
     @Value("#{target.bookCopy.originalBook.id}")
     Long getOriginalBookId();
 
+    @Value("#{target.bookCopy.originalBook.ISBN}")
+    String getIsbn();
+
+    @Value("#{target.bookCopy.originalBook.edition}")
+    String getEdition();
+
+    @Value("#{target.bookCopy.originalBook.imageName}")
+    String getImageName();
+
 }
