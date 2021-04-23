@@ -11,7 +11,7 @@ public interface BorrowProj {
     @Value("#{target.user}")
     UserProj getUserDTO();
 
-    @Value("#{target.borrowedDate}")
+    @Value("#{target.issueDate}")
     LocalDate getIssueDate();
 
     @Value("#{target.returnedDate}")
@@ -20,11 +20,6 @@ public interface BorrowProj {
     @Value("#{target.dueDate}")
     LocalDate getDueDate();
 
-    // this
-//    @Value("#{target.bookCopy}")
-//    BookCopyProj getBookCopyDTO();
-
-    // or all this
     @Value("#{target.bookCopy.id}")
     Long getBkCpyId();
 

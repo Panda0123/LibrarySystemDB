@@ -30,7 +30,7 @@ public class Book {
     @Column( nullable = false )
     private String title;
 
-    @Column(length = 16)
+    @Column(length = 17)
     private String ISBN;
 
     private int numAvailable;

@@ -27,17 +27,17 @@ public class Borrow {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private LocalDate borrowedDate;
+    private LocalDate issueDate;
     private LocalDate returnedDate;
     private LocalDate dueDate;
 
     public Borrow() {
     }
 
-    public Borrow(BookCopy bookCopy, User user, LocalDate borrowedDate, LocalDate dueDate) {
+    public Borrow(BookCopy bookCopy, User user, LocalDate issueDate, LocalDate dueDate) {
         this.bookCopy = bookCopy;
         this.user = user;
-        this.borrowedDate = borrowedDate;
+        this.issueDate = issueDate;
         this.dueDate = dueDate;
     }
 
@@ -58,12 +58,12 @@ public class Borrow {
         this.user = user;
     }
 
-    public LocalDate getBorrowedDate() {
-        return borrowedDate;
+    public LocalDate getIssueDate() {
+        return issueDate;
     }
 
-    public void setBorrowedDate(LocalDate borrowedDate) {
-        this.borrowedDate = borrowedDate;
+    public void setIssueDate(LocalDate issueDate) {
+        this.issueDate = issueDate;
     }
 
     public LocalDate getDueDate() {
@@ -111,7 +111,7 @@ public class Borrow {
                 "id=" + id +
                 ", book=" + bookCopy +
                 ", user=" + user +
-                ", borrowedDate=" + borrowedDate +
+                ", borrowedDate=" + issueDate +
                 ", dueDate=" + dueDate +
                 ", returnedDate=" + returnedDate +
                 '}';

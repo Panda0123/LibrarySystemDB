@@ -1,9 +1,6 @@
 package com.library.database_system.service;
 
-import com.library.database_system.DatabaseSystemApplication;
 import org.apache.commons.io.IOUtils;
-import org.apache.tomcat.jni.File;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -11,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,23 +20,6 @@ public class ImageService {
 
     public ImageService() {
         storageDirectoryPath = Paths.get("").toAbsolutePath().toString() + "/cover";
-//        try {
-//            storageDirectoryPath = new ClassPathResource("static/images/").getFile().getAbsolutePath();
-//            storageDirectoryPath = new ClassPathResource("static/images/").getInputStream().getAbsolutePath();
-//            String path = new File(DatabaseSystemApplication.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
-//            storageDirectoryPath = DatabaseSystemApplication.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-//            storageDirectoryPath = storageDirectoryPath.substring(1, storageDirectoryPath.lastIndexOf("/")) + "/cover";
-//            ImageService.class.getResource().getFile()
-//            getClass().getClassLoader().getResource("static/images/").getPath();
-//                    .getFile().
-//                    .getAbsolutePath();
-
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//
-//        } catch (URISyntaxException ex) {
-//            ex.printStackTrace();
-//        }
     }
 
     public ResponseEntity uploadToLocalFileSystem(MultipartFile file) {

@@ -16,7 +16,7 @@ public class Copyright {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "copyright_sequence")
     private Long id;
 
-    @OneToMany( mappedBy = "copyright")
+    @OneToMany(mappedBy = "copyright")
     Set<Book> books = new HashSet<>();
 
     private String name;

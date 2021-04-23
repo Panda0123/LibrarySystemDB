@@ -3,8 +3,10 @@ package com.library.database_system.onstartup_scheduling;
 import com.library.database_system.domain.*;
 import com.library.database_system.repository.*;
 import com.library.database_system.service.*;
+import org.junit.runner.RunWith;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -233,7 +235,6 @@ public class BootStrapData implements CommandLineRunner  {
                     "General Works",
                     "Philosophy. Psychology. Religion",
                     "Auxiliary Sciences of History",
-                    //"World History and History of Europe, Asia, Africa, Australia, New Zealand, etc",
                     "World History and History of Asia, etc",
                     "History of America",
                     "Local History of the Americas",

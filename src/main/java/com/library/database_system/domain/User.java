@@ -16,7 +16,6 @@ public class User {
     public String f_name;
     public String m_name;
     public String l_name;
-    // public String status;
     public String address;
     public String userType;
 
@@ -39,7 +38,6 @@ public class User {
         this.f_name = fName;
         this.m_name = mName;
         this.l_name = lName;
-        // this.status = status;
         this.address = address;
         this.userType = userType;
     }
@@ -77,13 +75,6 @@ public class User {
         this.l_name = lName;
     }
 
-//    public String getStatus() {
-//        return status;
-//    }
-//
-//    public void setStatus(String status) {
-//        this.status = status;
-//    }
 
     public String getUserType() {
         return userType;
@@ -126,7 +117,6 @@ public class User {
     }
 
 
-    // OTHER METHODS
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -153,7 +143,6 @@ public class User {
                 ", fName='" + f_name + '\'' +
                 ", mName='" + m_name + '\'' +
                 ", lName='" + l_name + '\'' +
-                //", status=" + status +
                 '}';
     }
 }

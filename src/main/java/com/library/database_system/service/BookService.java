@@ -25,35 +25,23 @@ public class BookService {
     private final ShelfRepository shelfRepository;
     private final CopyrightRepository copyrightRepository;
     private final AuthorRepository authorRepository;
-    private final BorrowRepository borrowRepository;
     private final BookCopyRepository bookCopyRepository;
     private final ImageService imageService;
 
     @Autowired
-    public BookService(BookRepository bookRepository, PublishingHouseRepository publishingHouseRepository, CategoryRepository categoryRepository, ShelfRepository shelfRepository, CopyrightRepository copyrightRepository, BookRepository bookRepository1, AuthorRepository authorRepository, BorrowRepository borrowRepository, BookCopyRepository bookCopyRepository, ImageService imageService) {
+    public BookService(BookRepository bookRepository, PublishingHouseRepository publishingHouseRepository, CategoryRepository categoryRepository, ShelfRepository shelfRepository, CopyrightRepository copyrightRepository, AuthorRepository authorRepository, BookCopyRepository bookCopyRepository, ImageService imageService) {
         this.bookRepository = bookRepository;
         this.publishingHouseRepository = publishingHouseRepository;
         this.categoryRepository = categoryRepository;
         this.shelfRepository = shelfRepository;
         this.copyrightRepository = copyrightRepository;
         this.authorRepository = authorRepository;
-        this.borrowRepository = borrowRepository;
         this.bookCopyRepository = bookCopyRepository;
         this.imageService = imageService;
     }
 
-   public List<Book> getBooks() {
-        return this.bookRepository.findAll();
-    }
-
     public Collection<CollectionProj> getBooksCollection() {
         return this.bookRepository.getBooksCollection();
-    }
-
-    public Book getBookById(Long id) {
-        Book bk = this.bookRepository.findById(id).orElseThrow(
-                () -> { return new IllegalStateException("BookID:" + id + " does not exist");});
-        return bk;
     }
 
     public Collection<BookTransformer> getBooksDetails() {
@@ -85,6 +73,7 @@ public class BookService {
     }
 
 
+    @Transactional
     public Long addNewBook(BookDetailsDTO bkDetailsPOJO)  {
         Book newBk = new Book();
 
@@ -100,7 +89,6 @@ public class BookService {
         newBk.setEdition(bkDetailsPOJO.getEdition());
         newBk.setDateAdded(LocalDate.now());
         newBk.setTimeAdded(LocalTime.now());
-
 
         // copies
         newBk.setQuantity(bkDetailsPOJO.getQuantity());
@@ -128,10 +116,9 @@ public class BookService {
         // shelf
         Shelf shelf =  getShelfWithName(newBk, bkDetailsPOJO.getShelfName());
 
-
-        // authors
         this.bookRepository.save(newBk);
 
+        // authors
         if (!bkDetailsPOJO.getAuthors().isEmpty()) {
             for (AuthorDTO authorDTO : bkDetailsPOJO.getAuthors()) {
                 Optional<Author> authorOpt = this.authorRepository.findAuthorByFullName(authorDTO.getf_name(), authorDTO.getm_name(), authorDTO.getl_name());
@@ -194,6 +181,7 @@ public class BookService {
         return newBk.getId();
     }
 
+    @Transactional
     public void deleteBook(Long bookId){
         Book bk = this.bookRepository.findById(bookId).orElseThrow(
                 () -> { throw new IllegalStateException("BookId:" + bookId + " already exist");} );
@@ -231,8 +219,11 @@ public class BookService {
                         bk.setTitle(value);
                     break;
                 case "isbn":
-                    if (value != null && !Objects.equals(bk.getISBN(), value))
-                        bk.setISBN(value);
+                    if (!Objects.equals(bk.getISBN(), value))
+                        if (value != "")
+                            bk.setISBN(value);
+                        else
+                            bk.setISBN(null);
                     break;
                 case "language":
                     if (!Objects.equals(bk.getLanguage(), value))
@@ -514,7 +505,6 @@ public class BookService {
     }
 
     private Shelf getShelfWithName(Book bk, String shelfName) {
-        Shelf prevShelf = bk.getShelf();
         Shelf shelf = null;
 
         Optional<Shelf> shelfOpt = this.shelfRepository.findByName(shelfName);
@@ -533,11 +523,15 @@ public class BookService {
         Book bk = this.bookRepository.findById(bookId).orElseThrow(
                 () -> {throw new IllegalStateException("BookID:"+ bookId + " does not exist");} );
         return this.bookCopyRepository.getCopyProj(bookId);
-        // return bk.getBookCopy();
     }
 
     public boolean doesIsbnExist(String isbn) {
-        Optional<Book> bkOpt = this.bookRepository.findByISBN(isbn);  // check if there exist same isbn
+        Optional<Book> bkOpt = this.bookRepository.findByISBN(isbn);
         return bkOpt.isPresent();
+    }
+
+    public Book findBookByID(Long bookTestId) {
+        return this.bookRepository.findById(bookTestId).orElseThrow(() ->
+        { throw  new IllegalStateException(String.format("BookID: %s does not exist", bookTestId));} );
     }
 }

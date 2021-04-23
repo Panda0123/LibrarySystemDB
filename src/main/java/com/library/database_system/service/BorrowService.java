@@ -39,12 +39,14 @@ public class BorrowService {
         return this.borrowRepository.findAll();
     }
 
+    @Transactional
     public void addBorrow(Borrow borrow) {
-        // TODO: performs some check (if user is currently borrowing something)
         // if similar book and title then don't
-        Optional<Borrow> borrowOptional = this.borrowRepository.findById(borrow.getId());
-        if(borrowOptional.isPresent())
-            throw new IllegalStateException("Borrow already exist");
+        if (borrow.getId() != null) {
+            Optional<Borrow> borrowOptional = this.borrowRepository.findById(borrow.getId());
+            if (borrowOptional.isPresent())
+                throw new IllegalStateException("Borrow already exist");
+        }
         this.borrowRepository.save(borrow);
     }
 
@@ -133,10 +135,10 @@ public class BorrowService {
                         borrow.setUser(parseValUser);
                         parseValUser.getBorrowed().add(borrow);
                         break;
-                    case "borrowedDate":
+                    case "issueDate":
                         parseValLocalDate = LocalDate.parse(value);
-                        if (!Objects.equals(parseValLocalDate, borrow.getBorrowedDate())) {
-                            borrow.setBorrowedDate(parseValLocalDate);
+                        if (!Objects.equals(parseValLocalDate, borrow.getIssueDate())) {
+                            borrow.setIssueDate(parseValLocalDate);
                         }
                     case "dueDate":
                         parseValLocalDate = LocalDate.parse(value);
