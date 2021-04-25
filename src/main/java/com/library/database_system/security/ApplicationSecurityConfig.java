@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.crypto.SecretKey;
 
-import static com.library.database_system.security.ApplicationUserRole.*;
+import static com.library.database_system.security.ApplicationUserRole.ADMIN;
 
 @Configuration
 @EnableWebSecurity
@@ -49,8 +49,17 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JwtTokenVerifier(jwtConfig, secretKey), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/login", "/api/v1/user/all/**", "/api/v1/author/all/**", "/api/v1/book/all/**", "/api/v1/category/all/**", "/api/v1/images/all/**").permitAll()
-                .antMatchers("/api/v1/author/admin/**", "/api/v1/user/admin/**", "/api/v1/book/admin/**", "/api/v1/category/admin/**", "/api/v1/images/admin/**").hasRole(ADMIN.name())
+                .antMatchers("/login",
+                        "/api/v1/user/all/**",
+                        "/api/v1/author/all/**",
+                        "/api/v1/book/all/**",
+                        "/api/v1/category/all/**",
+                        "/api/v1/images/all/**").permitAll()
+                .antMatchers("/api/v1/author/admin/**",
+                        "/api/v1/user/admin/**",
+                        "/api/v1/book/admin/**",
+                        "/api/v1/category/admin/**",
+                        "/api/v1/images/admin/**").hasRole(ADMIN.name())
                 .anyRequest()
                 .authenticated();
     }

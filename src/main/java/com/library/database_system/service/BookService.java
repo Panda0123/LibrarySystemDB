@@ -440,7 +440,7 @@ public class BookService {
         copyright.getBooks().remove(bk);
         if(copyright.getBooks().isEmpty() &&
                 copyright.getName() != null &&
-                copyright.getYear() != 0) // year is set to Integer change this to null
+                copyright.getYear() != 0)
             this.copyrightRepository.delete(copyright);
     }
 

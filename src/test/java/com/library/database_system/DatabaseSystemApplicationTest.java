@@ -163,7 +163,6 @@ public class DatabaseSystemApplicationTest {
 
         Long numOfBorrow = borrowRepository.count();
 
-
         // when
         borrowService.addBorrow(newBorrow);
 

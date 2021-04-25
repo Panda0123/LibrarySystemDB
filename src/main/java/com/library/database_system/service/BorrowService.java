@@ -64,8 +64,6 @@ public class BorrowService {
             this.userService.updateUser(user, userDTO);
         } else {
             user = new User();
-            // TODO: check if user with the same full name already exist
-            // this.userRepository.findByFNameAndMNameAndLName();
             user.setId(userDTO.getId());
             user.setfName(userDTO.getfName());
             user.setmName(userDTO.getmName());
@@ -103,7 +101,6 @@ public class BorrowService {
         borrow.getBookCopy().setBorrower(null);
         borrow.getBookCopy().setStatus("Available");
         borrow.setReturnedDate(LocalDate.now());
-//        this.borrowRepository.deleteById(id);
     }
 
     @Transactional

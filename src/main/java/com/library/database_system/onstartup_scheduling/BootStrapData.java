@@ -3,14 +3,15 @@ package com.library.database_system.onstartup_scheduling;
 import com.library.database_system.domain.*;
 import com.library.database_system.repository.*;
 import com.library.database_system.service.*;
-import org.junit.runner.RunWith;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class BootStrapData implements CommandLineRunner  {
@@ -35,7 +36,6 @@ public class BootStrapData implements CommandLineRunner  {
 
 
     public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository, UserRepository userRepository, BorrowRepository borrowRepository, GradeLevelRepository gradeLevelRepository, SectionRepository sectionRepository, PublishingHouseRepository publishingHouseRepository, CategoryRepository categoryRepository, ShelfRepository shelfRepository, CopyrightRepository copyrightRepository, ReservationRepository reservationRepository, AuthorService authorService, BookService bookService, CategoryRepository categoryRepository1, AdminService adminService, BookCopyRepository bookCopyRepository, CategoryService categoryService, GradeLevelService gradeLevelService) {
-//    public BootStrapData(AdminService adminService, CategoryService categoryService, GradeLevelService gradeLevelService) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
@@ -316,16 +316,6 @@ public class BootStrapData implements CommandLineRunner  {
             userRepository.save(jamsed);
 
 
-    //        if (this.gradeLevelService.isEmpty()){
-    //            GradeLevel gradeLevel = new GradeLevel();
-    //            gradeLevel.setLevel(1);
-    //            this.gradeLevelService.addNewGradeLevel(gradeLevel);
-    //        }
-            // ADD ADMIN
-//            Admin admin = new Admin("admin", "admin");
-//            if (!this.adminService.contain(admin)) {
-//                this.adminService.addNewAdmin(admin);
-//            }
         }
     }
 }

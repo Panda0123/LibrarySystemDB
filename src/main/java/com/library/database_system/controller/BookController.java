@@ -1,6 +1,9 @@
 package com.library.database_system.controller;
 
 
+import com.library.database_system.domain.Author;
+import com.library.database_system.domain.BookCopy;
+import com.library.database_system.dtos.BookDetailsDTO;
 import com.library.database_system.dtos.BorrowDTO;
 import com.library.database_system.dtos.ReservationDTO;
 import com.library.database_system.projections.BookCopyProj;
@@ -8,15 +11,12 @@ import com.library.database_system.projections.BorrowProj;
 import com.library.database_system.projections.CollectionProj;
 import com.library.database_system.projections.ReservationProj;
 import com.library.database_system.resulttransformer.BookTransformer;
-import com.library.database_system.domain.*;
-import com.library.database_system.dtos.BookDetailsDTO;
 import com.library.database_system.service.BookService;
 import com.library.database_system.service.BorrowService;
 import com.library.database_system.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
